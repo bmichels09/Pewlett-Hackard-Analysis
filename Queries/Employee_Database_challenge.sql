@@ -28,3 +28,23 @@ INTO retiring_titles
 FROM unique_titles
 GROUP BY title
 ORDER BY count DESC;
+
+
+-- Get list of employees eligible for mentorship program
+SELECT DISTINCT ON (e.emp_no) e.emp_no,
+	e.first_name,
+	e.last_name,
+	e.birth_date,
+	de.from_date,
+	de.to_date,
+	t.title
+INTO mentorship_eligibility
+FROM employees as e
+	JOIN dept_emp as de
+		ON de.emp_no = e.emp_no
+	JOIN titles as t
+		ON t.emp_no = e.emp_no
+WHERE de.to_date = '9999-01-01'
+	AND e.birth_date BETWEEN '1965-01-01' AND '1965-12-31'
+	AND t.to_date = '9999-01-01'	--Get the employees' current titles
+ORDER BY e.emp_no;
